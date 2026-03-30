@@ -14,12 +14,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 18
+
       - run: npm ci
       - run: npm run build
+
       - run: ls -la build
-      - run: |
+
+      - name: Deploy to GitHub Pages
+        run: |
           npm install -g gh-pages
-          gh-pages -d build
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          gh-pages -d build -u "github-actions <github-actions@github.com>" -t ${{ secrets.GITHUB_TOKEN }}
